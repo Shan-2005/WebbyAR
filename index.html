@@ -64,8 +64,9 @@
   <a-scene
     embedded
     vr-mode-ui="enabled: false"
-    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono; trackingMethod: best;"
-    renderer="antialias: true; alpha: true; precision: medium;"
+    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono;"
+    renderer="antialias: true; alpha: true; logarithmicDepthBuffer: true;"
+    style="background: transparent !important;"
   >
     <a-marker preset="hiro" id="hiro-marker">
       <a-entity id="ar-object-container"></a-entity>
