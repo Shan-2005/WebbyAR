@@ -23,7 +23,52 @@
         </a-entity>`
     },
 
-    // ── 1. Robot (primitives) ──────────────────────────────────────
+    // ── 1. 🧟 Undead (Real GLB model) ────────────────────────────
+    {
+      id: 'obj-undead',
+      label: 'Undead',
+      icon: '🧟',
+      aframe: `
+        <a-entity
+          gltf-model="models/Undead.glb"
+          position="0 0 0"
+          scale="1 1 1"
+          rotation="0 0 0"
+          animation-mixer="clip: *; loop: repeat;">
+        </a-entity>`
+    },
+
+    // ── 2. 🏰 Castle (Real GLB model) ────────────────────────────
+    {
+      id: 'obj-castle',
+      label: 'Castle',
+      icon: '🏰',
+      aframe: `
+        <a-entity
+          gltf-model="models/Castle.glb"
+          position="0 0 0"
+          scale="0.05 0.05 0.05"
+          rotation="0 0 0"
+          animation-mixer="clip: *; loop: repeat;">
+        </a-entity>`
+    },
+
+    // ── 3. ⚔️ Knight (Real GLB model) ────────────────────────────
+    {
+      id: 'obj-knight',
+      label: 'Knight',
+      icon: '⚔️',
+      aframe: `
+        <a-entity
+          gltf-model="models/Knight.glb"
+          position="0 0 0"
+          scale="1 1 1"
+          rotation="0 0 0"
+          animation-mixer="clip: *; loop: repeat;">
+        </a-entity>`
+    },
+
+    // ── 4. Robot (primitives) ──────────────────────────────────────
     {
       id: 'obj-robot',
       label: 'Robot',
