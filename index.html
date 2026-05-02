@@ -2,186 +2,157 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0,
-        maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0814" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>WebAR – Marker-Based 3D Experience</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>WebAR – Fixed Camera Edition</title>
   <link rel="stylesheet" href="styles.css" />
 
-  <script src="https://cdn.jsdelivr.net/npm/aframe@1.3.0/dist/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+  <!-- Using Classic Stable versions for maximum mobile support -->
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+  <style>
+    /* Overlay Debug Log */
+    #debug-log {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      max-height: 120px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #00ff00;
+      font-family: monospace;
+      font-size: 10px;
+      padding: 8px;
+      border-radius: 8px;
+      overflow-y: auto;
+      z-index: 10000;
+      pointer-events: none;
+      display: none; /* Hidden by default, shown if ?debug is in URL or on error */
+    }
+    #splash { z-index: 9999; }
+  </style>
 </head>
-<body>
+<body style="margin: 0; overflow: hidden;">
 
-  <!-- ══════════════════════════════════════════════════════
-       AR SCENE — ALWAYS in the DOM, never hidden.
-       AR.js needs a visible canvas to start the camera.
-       The splash overlay sits on top with z-index.
-       ══════════════════════════════════════════════════════ -->
-  <a-scene
-    embedded
-    arjs="sourceType: webcam;
-          debugUIEnabled: false;
-          detectionMode: mono;
-          patternRatio: 0.75;"
-    renderer="logarithmicDepthBuffer: true; antialias: true; alpha: true;"
-    vr-mode-ui="enabled: false"
-    loading-screen="enabled: false"
-  >
-    <a-light type="ambient"     color="#ffffff" intensity="0.7"></a-light>
-    <a-light type="directional" color="#ffffff" intensity="1.2" position="1 2 1"></a-light>
-    <a-light type="point"       color="#a78bfa" intensity="0.9" position="0 1.5 0" distance="4"></a-light>
+  <div id="debug-log"></div>
 
-    <a-marker
-      preset="hiro"
-      smooth="true"
-      smoothCount="5"
-      smoothTolerance="0.01"
-      smoothThreshold="5"
-      emitevents="true"
-      id="hiro-marker"
-    >
-      <a-entity id="ar-object-container"></a-entity>
-    </a-marker>
-
-    <a-entity camera></a-entity>
-  </a-scene>
-
-  <!-- ══════════════════════════════════════════════════════
-       SPLASH OVERLAY — floats above AR scene.
-       Dismissed on "Start AR" tap. Camera streams underneath.
-       ══════════════════════════════════════════════════════ -->
+  <!-- Splash Screen -->
   <div id="splash">
     <div id="splash-content">
       <div id="splash-icon">🔮</div>
       <h1 id="splash-title">Web<span>AR</span></h1>
-      <p id="splash-sub">Marker-based Augmented Reality</p>
-
+      <p id="splash-sub">Camera Fix Version</p>
+      
       <div id="splash-steps">
         <div class="splash-step">
           <span class="splash-step-num">1</span>
-          <span>Tap <strong>Start AR</strong> and <strong>allow camera</strong> when asked</span>
+          <span>Tap <strong>Start AR</strong> to trigger camera prompt</span>
         </div>
         <div class="splash-step">
           <span class="splash-step-num">2</span>
-          <span>Print the <strong>Hiro marker</strong> or open it on screen</span>
-        </div>
-        <div class="splash-step">
-          <span class="splash-step-num">3</span>
-          <span>Point camera at the marker → <strong>3D object appears!</strong></span>
+          <span>Point at the <strong>Hiro Marker</strong></span>
         </div>
       </div>
 
-      <button id="start-btn" onclick="startAR()">▶ &nbsp;Start AR</button>
-      <a href="print-marker.html" id="marker-link">🖨️ Get Hiro Marker to print</a>
+      <button id="start-btn" onclick="requestCamera()">▶ Start AR</button>
+      <a href="print-marker.html" id="marker-link">🖨️ Get Marker Image</a>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════
-       CAMERA ERROR SCREEN — shown if permission denied
-       ══════════════════════════════════════════════════════ -->
-  <div id="cam-error">
-    <div id="cam-error-content">
-      <div style="font-size:3.5rem">📷</div>
-      <h2>Camera Access Needed</h2>
-      <p>AR requires your camera. Your browser blocked access or the permission was denied.</p>
-      <div class="err-steps">
-        <div class="err-step">Open your browser <strong>Settings → Site Permissions</strong></div>
-        <div class="err-step">Find this site and set Camera to <strong>Allow</strong></div>
-        <div class="err-step">Come back and <strong>reload the page</strong></div>
-      </div>
-      <button class="err-btn" onclick="location.reload()">🔄 Reload & Try Again</button>
-    </div>
-  </div>
+  <!-- AR Scene -->
+  <!-- Note: We keep this in the DOM but AR.js will handle the camera stream -->
+  <a-scene
+    embedded
+    vr-mode-ui="enabled: false"
+    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono; trackingMethod: best;"
+    renderer="antialias: true; alpha: true; precision: medium;"
+  >
+    <a-marker preset="hiro" id="hiro-marker">
+      <a-entity id="ar-object-container"></a-entity>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
 
-  <!-- HUD — shown after splash dismissed -->
-  <div id="hud" style="display:none">
-    <header id="top-bar">
+  <!-- HUD -->
+  <div id="hud" style="display:none; pointer-events: none;">
+    <header id="top-bar" style="pointer-events: auto;">
       <div id="logo">
         <div class="icon">🔮</div>
         <div class="brand">Web<span>AR</span></div>
       </div>
       <div id="status-badge">
         <div id="status-dot"></div>
-        <span id="status-text">Scanning…</span>
+        <span id="status-text">Scanning...</span>
       </div>
     </header>
 
-    <div id="center-area">
-      <div id="scan-hint">
-        <div class="scan-ring">
-          <span class="scan-ring-inner">🎯</span>
-        </div>
-        <p class="scan-hint-text">Point camera at the <strong>Hiro</strong> marker</p>
-      </div>
-    </div>
-
-    <footer id="bottom-panel">
-      <div id="object-selector" role="group" aria-label="Select 3D object"></div>
+    <footer id="bottom-panel" style="pointer-events: auto;">
+      <div id="object-selector"></div>
       <div id="info-bar">
-        <span>Object:</span>
-        <span id="current-label">Robot</span>
+        <span>Obj:</span> <span id="current-label">None</span>
         <span class="sep">|</span>
-        <span>Markers:</span>
-        <span id="marker-count">0</span>
+        <span>v3.0.1</span>
       </div>
     </footer>
   </div>
 
-  <a id="print-link" href="print-marker.html" title="Print Marker" style="display:none">🖨️</a>
-  <button id="back-btn" onclick="location.reload()" title="Back" style="display:none">✕</button>
-  <div id="toast" role="status" aria-live="polite"></div>
-
   <script>
-    // ── Camera permission check ──────────────────────────────────
-    // AR.js requests camera automatically. We listen for errors
-    // and show a friendly UI if permission is denied.
-    function checkCameraError() {
-      // AR.js triggers this event when video fails
-      const scene = document.querySelector('a-scene');
-      if (scene) {
-        scene.addEventListener('camera-error', showCamError);
-      }
+    const logEl = document.getElementById('debug-log');
+    function log(msg) {
+      console.log(msg);
+      logEl.style.display = 'block';
+      const div = document.createElement('div');
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
 
-      // Also directly try getUserMedia to detect blocked permission
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-          .then(stream => {
-            // Permission granted — stop the test stream (AR.js will open its own)
-            stream.getTracks().forEach(t => t.stop());
-          })
-          .catch(err => {
-            console.warn('Camera error:', err.name);
-            if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-              showCamError();
-            }
-          });
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+      log(`Error: ${msg} at ${lineNo}:${columnNo}`);
+      return false;
+    };
+
+    log("App initialized. Waiting for user gesture...");
+
+    async function requestCamera() {
+      log("Requesting camera...");
+      try {
+        // Force a permission check before AR.js takes over
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        log("Camera permission GRANTED.");
+        stream.getTracks().forEach(track => track.stop()); // Stop test stream
+        
+        startAR();
+      } catch (err) {
+        log(`Camera Permission FAILED: ${err.name} - ${err.message}`);
+        alert("Camera permission is required. Please check your browser settings and reload.");
       }
     }
 
-    function showCamError() {
-      document.getElementById('splash').style.display = 'none';
-      document.getElementById('cam-error').style.display = 'flex';
-    }
-
-    // ── Start AR — dismiss splash, show HUD ──────────────────────
     function startAR() {
+      log("Starting AR scene UI...");
       document.getElementById('splash').style.display = 'none';
-      document.getElementById('hud').style.display    = 'flex';
-      document.getElementById('print-link').style.display = 'block';
-      document.getElementById('back-btn').style.display   = 'block';
-
-      // Init app logic (marker listeners, object switcher)
-      if (typeof window.initARApp === 'function') window.initARApp();
+      document.getElementById('hud').style.display = 'flex';
+      
+      if (typeof window.initARApp === 'function') {
+        window.initARApp();
+        log("AR Logic initialized.");
+      } else {
+        log("Warning: initARApp not found.");
+      }
     }
 
-    // Run camera check after page load
+    // Check if scripts loaded
     window.addEventListener('load', () => {
-      setTimeout(checkCameraError, 1500);
+      if (typeof AFRAME === 'undefined') log("FAILED: A-Frame not loaded!");
+      else log("A-Frame loaded.");
+      
+      // Listen for AR.js specific events
+      window.addEventListener('camera-init', (data) => log("AR.js: Camera initialized."));
+      window.addEventListener('camera-error', (error) => log("AR.js: Camera ERROR!"));
     });
   </script>
+
   <script src="app.js"></script>
 </body>
 </html>
