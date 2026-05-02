@@ -21,9 +21,10 @@
     loading-screen="enabled: false"
     style="background: transparent !important;"
   >
-    <a-light type="ambient"     color="#ffffff" intensity="0.8"></a-light>
-    <a-light type="directional" color="#ffffff" intensity="1.2" position="1 2 1"></a-light>
-    <a-light type="point"       color="#a78bfa" intensity="0.6" position="0 2 0" distance="5"></a-light>
+    <a-light type="ambient" color="#ffffff" intensity="1.5"></a-light>
+    <a-light type="directional" color="#ffffff" intensity="1.8" position="-1 4 3" castShadow="true"></a-light>
+    <a-light type="point" color="#a78bfa" intensity="1.0" position="0 3 0" distance="10"></a-light>
+    <a-light type="hemisphere" color="#ffffff" groundColor="#000000" intensity="1.0"></a-light>
 
     <a-marker preset="hiro" smooth="true" smoothCount="5" emitevents="true" id="hiro-marker">
       <a-entity id="ar-object-container"></a-entity>

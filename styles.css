@@ -357,21 +357,41 @@ a-scene {
   align-items: center;
 }
 
-/* Object Selector */
+/* Object Selector Slider */
 #object-selector {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   background: var(--bg-glass);
   border: 1px solid var(--border-glass);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-radius: 18px;
-  padding: 10px 14px;
-  box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  max-width: calc(100vw - 40px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
+#object-selector::-webkit-scrollbar { display: none; }
+
 .obj-btn {
+  scroll-snap-align: center;
+  flex: 0 0 auto;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 12px 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-muted);
+  min-width: 85px;
+}
+
   flex-direction: column;
   align-items: center;
   gap: 4px;
