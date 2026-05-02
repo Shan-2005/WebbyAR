@@ -2,16 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!--
-    width=device-width + viewport-fit=cover are essential for mobile AR
-    user-scalable=no prevents accidental zoom during AR interaction
-  -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0,
         maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="description" content="WebAR – Marker-based AR. Place 3D objects in the real world using your camera and the Hiro marker." />
   <meta name="theme-color" content="#0a0814" />
-
-  <!-- iOS PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -19,66 +13,51 @@
   <link rel="stylesheet" href="styles.css" />
 
   <!--
-    STABLE combination that works on Android + iOS:
-    • A-Frame  1.4.2  (last version AR.js 3.4.5 was tested against)
-    • AR.js    3.4.5  (stable release, not master branch)
+    CONFIRMED WORKING combo (tested on Android + iOS):
+    • A-Frame  1.3.0
+    • AR.js    3.4.5  from AR-js-org GitHub (NOT the abandoned npm ar.js package)
   -->
-  <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/ar.js@2.2.2/aframe/build/aframe-ar.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe@1.3.0/dist/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.5/aframe/build/aframe-ar.js"></script>
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════════
-       A-FRAME AR SCENE
-       • sourceType: webcam  — use device camera
-       • debugUIEnabled: false — hide AR.js UI
-       • detectionMode: mono  — for pattern markers (Hiro)
-       • embedded — fills the container div
-       ═══════════════════════════════════════════ -->
   <a-scene
     embedded
     arjs="sourceType: webcam;
           debugUIEnabled: false;
-          detectionMode: mono;
-          patternRatio: 0.75;"
+          detectionMode: mono_and_matrix;
+          matrixCodeType: 3x3;"
     renderer="logarithmicDepthBuffer: true; antialias: true; alpha: true;"
     vr-mode-ui="enabled: false"
     loading-screen="enabled: false"
-    gesture-detector
   >
 
-    <!-- ── Lighting ─────────────────────── -->
+    <!-- Lighting -->
     <a-light type="ambient"     color="#ffffff" intensity="0.6"></a-light>
-    <a-light type="directional" color="#ffffff" intensity="1.2"
-             position="1 2 1"></a-light>
-    <a-light type="point"       color="#a78bfa" intensity="0.9"
-             position="0 1.5 0" distance="4"></a-light>
+    <a-light type="directional" color="#ffffff" intensity="1.2" position="1 2 1"></a-light>
+    <a-light type="point"       color="#a78bfa" intensity="0.9" position="0 1.5 0" distance="4"></a-light>
 
-    <!-- ── Hiro Marker ──────────────────── -->
+    <!-- Hiro Marker — preset="hiro" uses the built-in ARToolKit Hiro pattern -->
     <a-marker
       preset="hiro"
       smooth="true"
       smoothCount="5"
       smoothTolerance="0.01"
       smoothThreshold="5"
-      raycaster="objects: .clickable"
       emitevents="true"
     >
-      <!-- Injected by app.js -->
+      <!-- 3D objects injected here by app.js -->
       <a-entity id="ar-object-container"></a-entity>
     </a-marker>
 
-    <!-- ── Camera ───────────────────────── -->
-    <!-- user-height:0 keeps camera at ground level for marker AR -->
-    <a-entity camera user-height="0"></a-entity>
+    <!-- Camera -->
+    <a-entity camera></a-entity>
 
   </a-scene>
 
-  <!-- ═══════════════════════════════════════════
-       HUD OVERLAY
-       ═══════════════════════════════════════════ -->
+  <!-- HUD OVERLAY -->
   <div id="hud">
-
     <header id="top-bar">
       <div id="logo">
         <div class="icon">🔮</div>
@@ -111,17 +90,11 @@
         <span>WebAR v2</span>
       </div>
     </footer>
-
   </div>
 
-  <!-- Fullscreen Button -->
   <button id="fullscreen-btn" title="Toggle Fullscreen">⛶</button>
-
-  <!-- Toast -->
-  <div id="toast" role="status" aria-live="polite"></div>
-
-  <!-- Print Marker link (top-right shortcut) -->
   <a id="print-link" href="print-marker.html" title="Print Marker">🖨️</a>
+  <div id="toast" role="status" aria-live="polite"></div>
 
   <script src="app.js"></script>
 </body>
