@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="description" content="WebAR – Marker-based Augmented Reality experience. Place 3D objects in the real world using your camera and the Hiro marker." />
+  <meta name="theme-color" content="#0a0814" />
+
+  <title>WebAR – Marker-Based 3D Experience</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!--
+    A-Frame: Full WebXR / WebGL 3D engine
+    AR.js:   Marker-based AR tracking via camera
+  -->
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════
+       A-FRAME AR SCENE
+       • renderer: logarithmicDepthBuffer fixes z-fighting
+       • arjs: sourceType=webcam, debugUIEnabled=false for clean UI
+       • vr-mode-ui: disabled (we're not doing VR)
+       ═══════════════════════════════════════════════════ -->
+  <a-scene
+    embedded
+    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+    renderer="logarithmicDepthBuffer: true; antialias: true;"
+    vr-mode-ui="enabled: false"
+    loading-screen="enabled: false"
+  >
+
+    <!-- ── Lighting ────────────────────────────── -->
+    <a-light type="ambient"     color="#ffffff" intensity="0.5"></a-light>
+    <a-light type="directional" color="#ffffff" intensity="1.2"
+             position="1 2 1"></a-light>
+    <a-light type="point"       color="#a78bfa" intensity="0.8"
+             position="0 1 0" distance="3"></a-light>
+
+    <!-- ── Hiro Marker ─────────────────────────── -->
+    <!--
+      The standard "Hiro" marker is the white square with
+      the "H" symbol. Print it or open marker.html on screen.
+    -->
+    <a-marker preset="hiro" smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
+
+      <!-- 3D objects are dynamically injected here by app.js -->
+      <a-entity id="ar-object-container"></a-entity>
+
+    </a-marker>
+
+    <!-- ── Camera ─────────────────────────────── -->
+    <a-entity camera></a-entity>
+
+  </a-scene>
+
+  <!-- ═══════════════════════════════════════════════════
+       HUD OVERLAY
+       ═══════════════════════════════════════════════════ -->
+  <div id="hud">
+
+    <!-- Top Bar -->
+    <header id="top-bar">
+      <div id="logo">
+        <div class="icon">🔮</div>
+        <div class="brand">Web<span>AR</span></div>
+      </div>
+
+      <div id="status-badge">
+        <div id="status-dot"></div>
+        <span id="status-text">Scanning…</span>
+      </div>
+    </header>
+
+    <!-- Center Scan Hint -->
+    <div id="center-area">
+      <div id="scan-hint">
+        <div class="scan-ring">
+          <span class="scan-ring-inner">🎯</span>
+        </div>
+        <p class="scan-hint-text">Point camera at the <strong>Hiro</strong> marker</p>
+      </div>
+    </div>
+
+    <!-- Bottom Panel -->
+    <footer id="bottom-panel">
+      <!-- Object Switcher (populated by app.js) -->
+      <div id="object-selector" role="group" aria-label="Select 3D object"></div>
+
+      <!-- Info Bar -->
+      <div id="info-bar">
+        <span>Object:</span>
+        <span id="current-label">Robot</span>
+        <span class="sep">|</span>
+        <span>Markers:</span>
+        <span id="marker-count">0</span>
+        <span class="sep">|</span>
+        <span>WebAR v1.0</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Fullscreen Button -->
+  <button id="fullscreen-btn" title="Toggle Fullscreen">⛶</button>
+
+  <!-- Toast Notification -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <!-- App Logic -->
+  <script src="app.js"></script>
+
+</body>
+</html>
