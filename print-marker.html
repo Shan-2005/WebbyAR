@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Print Hiro Marker – WebAR</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #0a0814;
+      color: #f1f0ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 32px 20px;
+      gap: 28px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+    }
+    h1 span { color: #a78bfa; }
+
+    p.sub {
+      color: #9ca3af;
+      text-align: center;
+      font-size: 0.95rem;
+      max-width: 460px;
+      line-height: 1.6;
+    }
+
+    /* ── Marker Card ── */
+    .marker-wrapper {
+      background: white;
+      padding: 36px;
+      border-radius: 20px;
+      box-shadow:
+        0 0 0 8px rgba(124,58,237,0.25),
+        0 0 60px rgba(124,58,237,0.3),
+        0 20px 60px rgba(0,0,0,0.7);
+    }
+
+    /* Inline SVG Hiro Marker */
+    .hiro-marker {
+      display: block;
+      width: 280px;
+      height: 280px;
+      image-rendering: pixelated;
+    }
+
+    .print-btn {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: white;
+      border: none;
+      padding: 14px 36px;
+      border-radius: 40px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(124,58,237,0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .print-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(124,58,237,0.7);
+    }
+
+    .tips {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 420px;
+      width: 100%;
+    }
+    .tip {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(167,139,250,0.15);
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-size: 0.88rem;
+      color: #d1d5db;
+      line-height: 1.5;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .tip .emoji { flex-shrink: 0; font-size: 1.1rem; }
+
+    .back-link {
+      color: #a78bfa;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    /* ── Print Styles ── */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        padding: 20mm;
+        gap: 16px;
+      }
+      .print-btn, .back-link, .tips { display: none !important; }
+      h1 { color: black; font-size: 1.4rem; }
+      h1 span { color: #4f46e5; }
+      p.sub { color: #444; }
+      .marker-wrapper {
+        box-shadow: none;
+        border: 3px solid #ddd;
+        padding: 20px;
+      }
+      .hiro-marker { width: 220px; height: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🖨️ Print <span>Hiro</span> Marker</h1>
+  <p class="sub">Print this marker and place it flat on a surface. Point your phone camera at it to trigger the AR experience.</p>
+
+  <!-- Official Hiro Marker — reproduced as SVG for crisp print quality -->
+  <div class="marker-wrapper">
+    <!--
+      This is the official AR.js / artoolkit Hiro marker pattern
+      reproduced faithfully as an inline SVG for razor-sharp printing.
+      Each cell is 1/8 of the total size (280px grid → 35px per cell)
+    -->
+    <svg class="hiro-marker" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"
+         shape-rendering="crispEdges" aria-label="Hiro AR Marker">
+      <!-- Background black border -->
+      <rect width="8" height="8" fill="black"/>
+      <!-- White inner area -->
+      <rect x="1" y="1" width="6" height="6" fill="white"/>
+      <!-- Hiro pattern (black cells on white) -->
+      <!-- Row 2 (y=2) -->
+      <rect x="2" y="2" width="1" height="1" fill="black"/>
+      <rect x="4" y="2" width="1" height="1" fill="black"/>
+      <!-- Row 3 (y=3) -->
+      <rect x="2" y="3" width="3" height="1" fill="black"/>
+      <rect x="5" y="3" width="1" height="1" fill="black"/>
+      <!-- Row 4 (y=4) -->
+      <rect x="2" y="4" width="1" height="1" fill="black"/>
+      <rect x="4" y="4" width="1" height="1" fill="black"/>
+      <!-- Row 5 (y=5) -->
+      <rect x="2" y="5" width="1" height="1" fill="black"/>
+      <rect x="3" y="5" width="1" height="1" fill="black"/>
+      <rect x="4" y="5" width="1" height="1" fill="black"/>
+    </svg>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Print Marker</button>
+
+  <div class="tips">
+    <div class="tip"><span class="emoji">📄</span> Print on plain white paper — avoid glossy paper as it causes camera reflections.</div>
+    <div class="tip"><span class="emoji">📐</span> Keep the printed marker flat. Curved or wrinkled paper will confuse the tracker.</div>
+    <div class="tip"><span class="emoji">💡</span> Good lighting is key — avoid dark conditions or harsh direct light glare.</div>
+    <div class="tip"><span class="emoji">📏</span> Hold your phone 15–40 cm from the marker for best detection.</div>
+  </div>
+
+  <a class="back-link" href="index.html">← Back to AR Experience</a>
+
+</body>
+</html>
