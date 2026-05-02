@@ -33,10 +33,140 @@ html, body {
   overflow: hidden;
   font-family: var(--font-main);
   background: #000;
-  /* Prevent rubber-band scroll on iOS interfering with AR */
-  overscroll-behavior: none;
-  touch-action: none;
-  -webkit-overflow-scrolling: none;
+  /* NOTE: do NOT add touch-action:none here — it blocks camera permission dialogs */
+}
+
+/* ── Splash Screen ───────────────────────── */
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: radial-gradient(ellipse at 30% 40%, #1a0a3e 0%, #0a0814 60%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+#splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+}
+
+#splash-icon {
+  font-size: 4rem;
+  filter: drop-shadow(0 0 24px #7c3aed);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+#splash-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #f1f0ff;
+  letter-spacing: -0.5px;
+}
+#splash-title span { color: #a78bfa; }
+
+#splash-sub {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  margin-top: -10px;
+}
+
+#splash-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+}
+
+.splash-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(167,139,250,0.15);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  color: #d1d5db;
+  line-height: 1.5;
+}
+
+.splash-step-num {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  border-radius: 50%;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: white;
+}
+
+#start-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: var(--font-main);
+  cursor: pointer;
+  box-shadow: 0 0 32px rgba(124,58,237,0.5), 0 4px 16px rgba(0,0,0,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 0.3px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+#start-btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 0 16px rgba(124,58,237,0.4);
+}
+
+#marker-link {
+  color: #a78bfa;
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(167,139,250,0.3);
+  padding-bottom: 2px;
+  transition: color 0.2s;
+}
+#marker-link:hover { color: #c4b5fd; }
+
+/* ── Back button ─────────────────────────── */
+#back-btn {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 20;
+  pointer-events: auto;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-size: 1rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 /* ── A-Frame Scene ────────────────────────── */

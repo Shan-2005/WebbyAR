@@ -318,13 +318,19 @@
     markerCount.textContent = '0';
   }
 
-  // ── Init ────────────────────────────────────────────────────────
-  document.addEventListener('DOMContentLoaded', () => {
+  // ── Init (called by startAR() in index.html after user taps) ────
+  // Must run AFTER user gesture so camera permission prompt fires correctly.
+  function initARApp() {
     buildSelector();
-    arContainer.innerHTML = OBJECTS[0].aframe;
-    currentLabel.textContent = OBJECTS[0].label;
+
+    const container = document.getElementById('ar-object-container');
+    const label     = document.getElementById('current-label');
+    if (container) container.innerHTML = OBJECTS[0].aframe;
+    if (label)     label.textContent   = OBJECTS[0].label;
 
     const scene = document.querySelector('a-scene');
+    if (!scene) return;
+
     const attachMarkerListeners = () => {
       const marker = document.querySelector('a-marker');
       if (!marker) return;
@@ -337,7 +343,16 @@
     } else {
       scene.addEventListener('loaded', attachMarkerListeners);
     }
+  }
+
+  // Also run on DOMContentLoaded as fallback for desktop
+  document.addEventListener('DOMContentLoaded', () => {
+    // On desktop the splash is bypassed quickly; on mobile user taps Start AR
+    // so initARApp() will be called explicitly from index.html
   });
+
+  // Expose globally so index.html can call it
+  window.initARApp = initARApp;
 
   // ── Fullscreen ────────────────────────────────────────────────────
   const fsBtn = document.getElementById('fullscreen-btn');
